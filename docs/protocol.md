@@ -1,5 +1,4 @@
-# Protocol
---------------------
+#Protocol
 - Offers multiple streams over one USB interface
 - Needs Bulk in and Bulk out end points
 - A stream is uni-directional
@@ -10,4 +9,6 @@
 - Protocol handles multiplexing of streams
 
 Note: This is just  a first draft. Things may change while the implementation take place. 
+
+
 Any kind of contributions welcome :)
