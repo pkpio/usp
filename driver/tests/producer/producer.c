@@ -42,6 +42,9 @@ static void __exit producer_cleanup(void)
 	// Cancel the delayed work
 	cancel_delayed_work(&task);
 
+        // Flush workqueue
+        flush_workqueue(wq);
+
 	// Destroy the workqueue
 	destroy_workqueue(wq);
 }

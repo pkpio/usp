@@ -36,24 +36,14 @@ static int __init consumer_init(void)
 
 static void __exit consumer_cleanup(void)
 {
-	// Test1
-	printk("Test 1 reached\n");	
-
 	// Cancel the delayed work
 	cancel_delayed_work(&task);
 
-	printk("Test 2 reached\n");
-	
 	// Flush workqueue
-	//flush_workqueue(wq);	
+	flush_workqueue(wq);	
 	
-	printk("Test 21 reached\n");	
-
 	// Destroy the workqueue
 	destroy_workqueue(wq);
-	
-	// Test2
-	printk("Test 3 reached\n");
 }
 
 module_init(consumer_init);

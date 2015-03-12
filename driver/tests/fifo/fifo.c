@@ -17,31 +17,38 @@ MODULE_DESCRIPTION("Fifo module");
 MODULE_LICENSE("GPL");
 
 void add_item(int *item){
-	down(&empty);
+	if(down_trylock(&empty))
+		return; // Buffer full
 	
-	down(&cr);
+	if(down_interruptible(&cr))
+		return;	// Interrupted
+
 	// start of critical region
 	buffer[ins_pos] = item[0];
 	ins_pos = (ins_pos == BUFFER_SIZE-1) ? 0 : ins_pos + 1;
 	// end of critical region
-	up(&cr);
 
+	up(&cr);
 	up(&full);
+
 	printk("Item added : %d\n", item[0]);
 }
 
 int get_item(void){
 	int item;
 	
-	down(&full);
+	if(down_trylock(&full))
+		return -ENODATA; // No data available
 	
-	down(&cr);
+	if(down_interruptible(&cr))
+		return -EINTR; // Interrupted
+
 	// start of critical region
 	item = buffer[rem_pos];
 	rem_pos = (rem_pos == BUFFER_SIZE-1) ? 0 : rem_pos + 1;
 	// end of critical region
-	up(&cr);
-	
+
+	up(&cr);	
 	up(&empty);
 	
 	return item;
