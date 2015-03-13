@@ -16,15 +16,15 @@
 
 // Arrays make good circular queues
 int in_buf[INSTREAM_COUNT][INSTREAM_BUFFER_SIZE];
-int in_buf[OUTSTREAM_COUNT][OUTSTREAM_BUFFER_SIZE];
+int out_buf[OUTSTREAM_COUNT][OUTSTREAM_BUFFER_SIZE];
 
 // Inserting position in buffers
-int inbuf_inpos[INSTREAM_COUNT] = 0;
-int outbuf_inpos[OUTSTREAM_COUNT] = 0;
+int inbuf_inpos[INSTREAM_COUNT] = { 0 };
+int outbuf_inpos[OUTSTREAM_COUNT] = { 0 };
 
 // Removing position in a buffers
-int inbuf_rmpos[INSTREAM_COUNT] = 0;
-int outbuf_rmpos[OUTSTREAM_COUNT] = 0;
+int inbuf_rmpos[INSTREAM_COUNT] = { 0 };
+int outbuf_rmpos[OUTSTREAM_COUNT] = { 0 };
 
 // For race conditioning
 static struct semaphore inbuf_full[INSTREAM_COUNT];
@@ -36,40 +36,43 @@ static struct semaphore outbuf_empty[OUTSTREAM_COUNT];
 static struct semaphore inbuf_cs[INSTREAM_COUNT];
 static struct semaphore outbuf_cs[OUTSTREAM_COUNT];
 
-void add_item(int *item){
-	if(down_trylock(&empty))
+// For out streams
+void add_item(int stream, int *item){
+	if(down_trylock(&outbuf_empty[stream]))
 		return; // Buffer full
 	
-	if(down_interruptible(&cr))
+	if(down_interruptible(&outbuf_cs[stream]))
 		return;	// Interrupted
 
 	// start of critical region
-	buffer[ins_pos] = item[0];
-	ins_pos = (ins_pos == BUFFER_SIZE-1) ? 0 : ins_pos + 1;
+	out_buf[stream][outbuf_inpos[stream]] = item[0];
+	outbuf_inpos[stream] = (outbuf_inpos[stream] == OUTSTREAM_BUFFER_SIZE-1)
+				 ? 0 : outbuf_inpos[stream] + 1;
 	// end of critical region
 
-	up(&cr);
-	up(&full);
+	up(&outbuf_cs[stream]);
+	up(&outbuf_full[stream]);
 
 	printk("Item added : %d\n", item[0]);
 }
 
-int get_item(void){
+int get_item(int stream){
 	int item;
 	
-	if(down_trylock(&full))
+	if(down_trylock(&outbuf_full[stream]))
 		return -ENODATA; // No data available
 	
-	if(down_interruptible(&cr))
+	if(down_interruptible(&outbuf_cs[stream]))
 		return -EINTR; // Interrupted
 
 	// start of critical region
-	item = buffer[rem_pos];
-	rem_pos = (rem_pos == BUFFER_SIZE-1) ? 0 : rem_pos + 1;
+	item = out_buf[stream][outbuf_rmpos[stream]];
+	outbuf_rmpos[stream] = (outbuf_rmpos[stream] == OUTSTREAM_BUFFER_SIZE-1)
+				 ? 0 : outbuf_rmpos[stream] + 1;
 	// end of critical region
 
-	up(&cr);	
-	up(&empty);
+	up(&outbuf_cs[stream]);	
+	up(&outbuf_empty[stream]);
 	
 	return item;
 }
@@ -77,10 +80,20 @@ int get_item(void){
 // initialize module (executed when using insmod)
 static int __init fifo_init(void)
 {
+	int i = 0;
+	
 	// Init semaphores
-	sema_init(&full, 0);
-	sema_init(&empty, BUFFER_SIZE);
-	sema_init(&cr, 1); // using this as a mutex
+	for(i=0; i<INSTREAM_COUNT; i++){
+		sema_init(&inbuf_full[i], 0);
+		sema_init(&inbuf_empty[i], INSTREAM_BUFFER_SIZE);
+		sema_init(&inbuf_cs[i], 1); // using this as a mutex
+	}
+	for(i=0; i<OUTSTREAM_COUNT; i++){
+		sema_init(&outbuf_full[i], 0);
+		sema_init(&outbuf_empty[i], OUTSTREAM_BUFFER_SIZE);
+		sema_init(&outbuf_cs[i], 1); // using this as a mutex
+	}
+	
 	return 0;	
 }
 
