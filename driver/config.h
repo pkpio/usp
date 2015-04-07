@@ -8,8 +8,19 @@
  * more details
  *
  */
- 
-#define INSTREAM_COUNT 		2 	// # of streams to read data from
-#define OUTSTREAM_COUNT 	2	// # of streams to write data to
-#define INSTREAM_BUFFER_SIZE	512	// size of buffers used for instreams
-#define OUTSTREAM_BUFFER_SIZE	8192	// size of buffers used for outstreams
+
+/**
+ * Packet size (in bytes) is the unit of data sent over USB per transfer.
+ * Min:		64 	(for USB full-speed accessories)
+ * Optimal:	512	(for USB high-speed accessories)
+ * Max: 	16384	(least packet header overhead)
+ */
+#define usctp_packet_size	512
+
+/**
+ * # of URBs reserved for transfers
+ * Out - Sending data. In - Receiving data.
+ */
+#define urb_out_count	1024
+#define urb_in_count	512
+
