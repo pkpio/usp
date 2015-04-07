@@ -11,4 +11,8 @@ A USB interface that has the following 2 end points
   - Bulk in
   - Bulk out
 
+#Using with Android Accessory Mode
+The interface work with both USB Host and Accessory modes for Android device. To use with Accessory mode, check [adk-driver][2] to set device into ADK mode. usctp can take over once the device enter ADK mode.
+
 [1]: http://en.wikipedia.org/wiki/Stream_Control_Transmission_Protocol
+[2]: https://github.com/praveendath92/adk-driver
