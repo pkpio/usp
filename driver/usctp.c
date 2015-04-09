@@ -15,10 +15,6 @@
 #include "config.h"
 #include "types.h"
 
-//struct usctp_rcb_t{
-//	int i;
-//};
-
 /**
  * Send data over a stream.
  * Non-blocking call. When sufficient buffer space is not available, 
@@ -52,12 +48,13 @@ int usctp_send_data(int stream, void *data, int length){
  * returns:
  *	0 if success else negative value with errno set
  */
-int usctp_register_rcb(int stream, usctp_rcb_t *receive_cb){
+int usctp_register_rcb(int stream, struct usctp_rcb_t *receive_cb){
 	/**
 	 * -TODO-
 	 * Define receive_cb struct. Also figure out how to use the same struct
 	 * in other files where this fn is imported through symtables.
 	 */
+	printk("Register called for %d %d\n", stream, receive_cb->a);
 	return 0;
 }
 
@@ -73,7 +70,6 @@ static void __exit usctp_cleanup(void)
 
 }
 
-//EXPORT_SYMBOL(usctp_rcb_t);
 EXPORT_SYMBOL(usctp_send_data);
 EXPORT_SYMBOL(usctp_register_rcb);
 
