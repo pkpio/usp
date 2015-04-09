@@ -1,5 +1,5 @@
 #include <linux/module.h>
-#include "../types.h"
+#include "../common.h"
 
 extern int usctp_register_rcb(int, struct usctp_rcb_t *);
 

@@ -13,7 +13,7 @@
 #include <linux/errno.h>
 #include <linux/semaphore.h>
 #include "config.h"
-#include "types.h"
+#include "common.h"
 
 /**
  * Send data over a stream.
