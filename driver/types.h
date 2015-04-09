@@ -1,5 +1,5 @@
 
 struct usctp_rcb_t{
-	int a;
+	void (*receive) (int length, void *data);
 };
 

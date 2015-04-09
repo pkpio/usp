@@ -54,7 +54,8 @@ int usctp_register_rcb(int stream, struct usctp_rcb_t *receive_cb){
 	 * Define receive_cb struct. Also figure out how to use the same struct
 	 * in other files where this fn is imported through symtables.
 	 */
-	printk("Register called for %d %d\n", stream, receive_cb->a);
+	printk("Register called for %d\n", stream);
+	receive_cb->receive(7, NULL);
 	return 0;
 }
 

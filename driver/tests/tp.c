@@ -3,10 +3,14 @@
 
 extern int usctp_register_rcb(int, struct usctp_rcb_t *);
 
+void test_receive(int length, void *data){
+	printk("Length got is: %d\n", length);
+}
+
 static int __init tp_init(void)
 {
 	struct usctp_rcb_t test;
-	test.a = 33;
+	test.receive = test_receive;
 	usctp_register_rcb(22, &test);
 	return 0;	
 }
