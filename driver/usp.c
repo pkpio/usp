@@ -1,5 +1,5 @@
 /*
- * usctp.c - Usb Stream Control Transmission Protocol
+ * usp - Usb Streams Protocol
  *
  * Copyright (C) 2015 Praveen Kumar Pendyala <m@praveen.xyz>
  *
@@ -31,7 +31,7 @@
  *	Number of bytes sent. In case of error, a negative value is returned 
  *	with errno set.
  */
-int usctp_send_data(int stream, void *data, int length){
+int usp_send_data(int stream, void *data, int length){
 	printk("Send data called\n");
 	return 0;
 }
@@ -48,35 +48,40 @@ int usctp_send_data(int stream, void *data, int length){
  * returns:
  *	0 if success else negative value with errno set
  */
-int usctp_register_rcb(int stream, struct usctp_rcb_t *receive_cb){
+int usp_register_receive_cb(int stream, struct usp_receive_cb_t *receive_cb){
 	/**
 	 * -TODO-
 	 * Define receive_cb struct. Also figure out how to use the same struct
 	 * in other files where this fn is imported through symtables.
 	 */
 	printk("Register called for %d\n", stream);
+
+	/**
+	 * As a proof of concept, we call the receive fn passed with test values.
+	 * You may verify this data with printk in the receive fn.
+	 */
 	receive_cb->receive(7, NULL);
 	return 0;
 }
 
 // initialize module (executed when using insmod)
-static int __init usctp_init(void)
+static int __init usp_init(void)
 {
 	return 0;	
 }
 
 // cleanup module (executed when using rmmod)
-static void __exit usctp_cleanup(void)
+static void __exit usp_cleanup(void)
 {
 
 }
 
-EXPORT_SYMBOL(usctp_send_data);
-EXPORT_SYMBOL(usctp_register_rcb);
+EXPORT_SYMBOL(usp_send_data);
+EXPORT_SYMBOL(usp_register_receive_cb);
 
-module_init(usctp_init);
-module_exit(usctp_cleanup);
+module_init(usp_init);
+module_exit(usp_cleanup);
 
 MODULE_AUTHOR("Praveen Kumar Pendyala");
-MODULE_DESCRIPTION("USCTP Module");
+MODULE_DESCRIPTION("USP Module");
 MODULE_LICENSE("GPL");

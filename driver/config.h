@@ -1,5 +1,5 @@
 /*
- * usctp.c - Usb Stream Control Transmission Protocol
+ * usp.c - Usb Streams Protocol
  *
  * Copyright (C) 2015 Praveen Kumar Pendyala <m@praveen.xyz>
  *
@@ -15,7 +15,7 @@
  * Optimal:	512	(for USB high-speed accessories)
  * Max: 	16384	(least packet header overhead)
  */
-#define usctp_packet_size	512
+#define usp_packet_size	512
 
 /**
  * # of URBs reserved for transfers

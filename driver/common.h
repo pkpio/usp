@@ -1,7 +1,7 @@
 /**
  *
  * The common header file that contains general configuration details used in
- * the usctp driver. Any module that uses usctp module should be importing this
+ * the usp driver. Any module that uses usctp module should be importing this
  * file to get custom structs, params and config used by the usctp driver
  */
 
@@ -23,7 +23,7 @@
 /**
  * Custom types used by the usctp driver. Particularily for Data exchange
  */
-struct usctp_rcb_t{
+struct usp_receive_cb_t{
         void (*receive) (int length, void *data);
 };
 
