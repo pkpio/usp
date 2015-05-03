@@ -1,1 +1,1 @@
-Android side decoding of the USCTP data streams
+Android side decoding of the USP data streams
