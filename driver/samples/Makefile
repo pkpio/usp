@@ -1,4 +1,4 @@
-SRCS   = tp.c ../usctp.c
+SRCS   = usp_cb_test.c ../usp.c
 OBJS   = $(SRCS:.c=.o)
 
 obj-m += $(OBJS)
