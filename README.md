@@ -1,5 +1,5 @@
-# usctp
-USCTP - USB SCTP is an imitation of the [stream control transport protocol][1] of networks in context of USB transfer in kernel space.
+# USP
+USP - USB Streams Protocol is an imitation of the [stream control transport protocol][1] of networks in context of USB transfer in kernel space.
 
 #What if offers
   - Multiple streams
